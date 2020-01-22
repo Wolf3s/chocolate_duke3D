@@ -81,7 +81,7 @@ void settrans(int32_t type);
 //VISUALIZE RENDERER
 
 #define MAX_PIXEL_RENDERERED ((1600*1200)+20000 )
-extern int32_t pixelsAllowed;
+extern uint32_t pixelsAllowed;
 
 #define RENDER_DRAW_WALL_BORDERS 1
 #define RENDER_DRAW_WALL_INSIDE 1

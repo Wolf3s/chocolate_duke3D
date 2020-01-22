@@ -10,7 +10,7 @@
 #include "build.h"
 #include "draw.h"
 
-int32_t pixelsAllowed = 10000000000;
+uint32_t pixelsAllowed = 10000000000;
 
 uint8_t  *transluc = NULL;
 
