@@ -14,7 +14,7 @@
 #include "../../Game/src/global.h"
 #include <strings.h>
 
-char game_dir[512];
+char  game_dir[512] = { '\0' };
 
 //The multiplayer module in game.dll needs direct access to the crc32 (sic).
 int32_t groupefil_crc32[MAXGROUPFILES];

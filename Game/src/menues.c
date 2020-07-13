@@ -44,6 +44,10 @@ short last_zero,last_fifty,last_threehundred = 0;
 static uint8_t  fileselect = 1, menunamecnt;
 static char menuname[256][17];
 
+_KeyMapping KeyMapping[MAXGAMEBUTTONS];
+int32 MouseMapping[MAXMOUSEBUTTONS];
+int32 MouseDigitalAxeMapping[MAXMOUSEAXES][2];  // [axesX/Y][directionLeft/Right or directionUp/Down]
+
 // File tree info
 //
 uint8_t  szCurrentDirectory[1024] = {'\0'};

@@ -88,6 +88,7 @@ int32 CommandMusicToggleOff = 0;
 // For addfaz's stun server. use /stun to activate
 uint16_t g_bStun = 0;
 
+char  *mymembuf;
 char confilename[128] = {"GAME.CON"};
 char boardfilename[128] = {0};
 uint8_t  waterpal[768], slimepal[768], titlepal[768], drealms[768], endingpal[768];

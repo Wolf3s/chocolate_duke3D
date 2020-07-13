@@ -32,7 +32,6 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 #include "global.h"
 #include "duke3d.h"
 
-char  *mymembuf;
 uint8_t  MusicPtr[72000];
 
 
@@ -69,6 +68,8 @@ int BYTEVERSION			= 119; // xDuke v19.7
 
 short global_random;
 short neartagsector, neartagwall, neartagsprite;
+char** _argv;
+int _argc;
 
 int32_t gc,neartaghitdist,lockclock,max_player_health,max_armour_amount,max_ammo_amount[MAX_WEAPONS];
 

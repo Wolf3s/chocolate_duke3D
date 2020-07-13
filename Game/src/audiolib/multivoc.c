@@ -84,6 +84,8 @@ static VOLUME16 *MV_ReverbTable = NULL;
 static int       MV_ReverbTable = -1;
 #endif
 
+SDL_mutex* reverbMutex;
+
 //static signed short MV_VolumeTable[ MV_MaxVolume + 1 ][ 256 ];
 //static signed short MV_VolumeTable[ 63 + 1 ][ 256 ];
 
