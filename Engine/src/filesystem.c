@@ -187,6 +187,7 @@ void crc32_table_gen(unsigned int* crc32_table) /* build CRC32 table */
     }
 }
 
+#if 0
 unsigned int crc32(uint8_t  *buf, unsigned int length)
 {
 	unsigned int initial_crc;
@@ -194,6 +195,7 @@ unsigned int crc32(uint8_t  *buf, unsigned int length)
 	initial_crc = 0;
 	return(crc32_update(buf, length, initial_crc));
 }
+#endif
 
 unsigned int crc32_update(uint8_t  *buf, unsigned int length, unsigned int crc_to_update)
 {
