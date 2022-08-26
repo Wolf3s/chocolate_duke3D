@@ -121,9 +121,11 @@ int MUSIC_PlaySong(char  *songFilename, int loopflag)
     
     //Ok, the file is in memory
     rw = SDL_RWFromMem((void *) musicDataBuffer, fileSize); 
-    
+#if !SDL_VERSION_ATLEAST(2,0,0)
     sdlMusic = Mix_LoadMUS_RW(rw);
-    
+#else
+    sdlMusic = Mix_LoadMUS_RW(rw, 1);
+#endif
     Mix_PlayMusic(sdlMusic, (loopflag == MUSIC_PlayOnce) ? 0 : -1);
     
     return 1;

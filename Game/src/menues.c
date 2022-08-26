@@ -2687,15 +2687,27 @@ else
 
 				case 5:
 
-					if (SDL_WM_GrabInput(SDL_GRAB_QUERY)==SDL_GRAB_ON) 
+#if !SDL_VERSION_ATLEAST(2,0,0)
+			if (SDL_WM_GrabInput(SDL_GRAB_QUERY)==SDL_GRAB_ON)
+#else
+			if (SDL_GetRelativeMouseMode()==SDL_TRUE)
+#endif
 					{
+#if !SDL_VERSION_ATLEAST(2,0,0)
 						SDL_WM_GrabInput(SDL_GRAB_OFF);
 						SDL_ShowCursor(1);
+#else
+						SDL_SetRelativeMouseMode(SDL_FALSE);
+#endif
 					}
 					else
 					{
+#if !SDL_VERSION_ATLEAST(2,0,0)
 						SDL_WM_GrabInput(SDL_GRAB_ON);
 						SDL_ShowCursor(0);
+#else
+						SDL_SetRelativeMouseMode(SDL_TRUE);
+#endif
 					}
 					break;
 
@@ -2738,7 +2750,11 @@ else
 
 
 			menutext(c,43+16*5,SHX(-7),PHX(-7),"MOUSE CURSOR");
-			if(SDL_WM_GrabInput(SDL_GRAB_QUERY)==SDL_GRAB_ON)
+#if !SDL_VERSION_ATLEAST(2,0,0)
+			if (SDL_WM_GrabInput(SDL_GRAB_QUERY)==SDL_GRAB_ON)
+#else
+			if (SDL_GetRelativeMouseMode()==SDL_TRUE)
+#endif
 				menutext(c+160+40,43+16*5,SHX(-7),PHX(-7),"TAKEN");
 			else
 				menutext(c+160+40,43+16*5,SHX(-7),PHX(-7),"FREE'D");
