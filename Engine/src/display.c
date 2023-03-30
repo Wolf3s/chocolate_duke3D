@@ -62,7 +62,44 @@ void TIMER_GetPlatformTicks(int64_t* t);
 //END // NATIVE TIMER FUNCTION DECLARATION
 
 
+#if SDL_VERSION_ATLEAST(3,0,0)
+#undef SDL_QUIT
+#undef SDL_MOUSEMOTION
+#undef SDL_MOUSEBUTTONDOWN
+#undef SDL_MOUSEBUTTONUP
+#undef SDL_KEYDOWN
+#undef SDL_KEYUP
+#undef KMOD_SHIFT
+#undef KMOD_CTRL
+#undef KMOD_ALT
+#undef KMOD_NONE
+#undef SDL_PixelFormatEnumToMasks
+#undef SDL_JOYBUTTONDOWN
+#undef SDL_JOYBUTTONUP
+#undef SDL_SetColorKey
+#undef SDL_FreeSurface
+#undef SDL_RenderCopy
+#undef SDL_FillRect
 
+#define SDL_QUIT SDL_EVENT_QUIT
+#define SDL_MOUSEMOTION SDL_EVENT_MOUSE_MOTION
+#define SDL_MOUSEBUTTONDOWN SDL_EVENT_MOUSE_BUTTON_DOWN
+#define SDL_MOUSEBUTTONUP SDL_EVENT_MOUSE_BUTTON_UP
+#define SDL_KEYDOWN SDL_EVENT_KEY_DOWN
+#define SDL_KEYUP SDL_EVENT_KEY_UP
+#define KMOD_SHIFT SDL_KMOD_SHIFT
+#define KMOD_CTRL SDL_KMOD_CTRL
+#define KMOD_ALT SDL_KMOD_ALT
+#define KMOD_NONE SDL_KMOD_NONE
+#define SDL_PixelFormatEnumToMasks SDL_GetMasksForPixelFormatEnum
+#define SDL_JOYBUTTONDOWN SDL_EVENT_JOYSTICK_BUTTON_DOWN
+#define SDL_JOYBUTTONUP SDL_EVENT_JOYSTICK_BUTTON_UP
+#define SDL_SetColorKey SDL_SetSurfaceColorKey
+#define SDL_FreeSurface SDL_DestroySurface
+#define SDL_RenderCopy SDL_RenderTexture
+#define SDL_FillRect SDL_FillSurfaceRect
+
+#endif
 
 
 
@@ -317,7 +354,14 @@ static void init_new_res_vars(int32_t davidoption)
     
 }
 
-
+#if SDL_VERSION_ATLEAST(3,0,0)
+static SDL_Surface *SDL_CreateRGBSurface(Uint32 flags, int width, int height,
+	int depth, Uint32 Rmask, Uint32 Gmask, Uint32 Bmask, Uint32 Amask)
+{
+    return SDL_CreateSurface(width, height,
+            SDL_GetPixelFormatEnumForMasks(depth, Rmask, Gmask, Bmask, Amask));
+}
+#endif
 
 static void go_to_new_vid_mode(int davidoption, int w, int h)
 {
@@ -342,8 +386,12 @@ static void go_to_new_vid_mode(int davidoption, int w, int h)
 	SDL_PixelFormatEnumToMasks(SDL_GetWindowPixelFormat(window), &unused_bpp,
 		&rmask, &gmask, &bmask, &amask);
 	rgbasurf = SDL_CreateRGBSurface(0, w, h, 32, rmask, gmask, bmask, amask);
+#if !SDL_VERSION_ATLEAST(3,0,0)
 	SDL_RenderSetLogicalSize(renderer, w, h);
-
+#else
+	SDL_SetRenderLogicalPresentation(renderer, w, h,
+		SDL_LOGICAL_PRESENTATION_LETTERBOX, SDL_SCALEMODE_NEAREST);
+#endif //SDL3
 #endif
     if (surface == NULL)
     {
@@ -398,12 +446,16 @@ static int sdl_mouse_motion_filter(SDL_Event const *event)
 {
     if (surface == NULL)
 		return(0);
-
+#if SDL_VERSION_ATLEAST(3,0,0)
+    if (0) {}
+#else
     if (event->type == SDL_JOYBALLMOTION)
+
     {
         mouse_relative_x = event->jball.xrel/100;
         mouse_relative_y = event->jball.yrel/100;
     }
+#endif
     else
     {
 #if !SDL_VERSION_ATLEAST(2,0,0)
@@ -822,7 +874,9 @@ static int root_sdl_event_filter(const SDL_Event *event)
 	            //return(sdl_joystick_button_filter((const SDL_MouseButtonEvent*)event));
                 return 0;
             }
+#if !SDL_VERSION_ATLEAST(3,0,0)
         case SDL_JOYBALLMOTION:
+#endif
         case SDL_MOUSEMOTION:
             return(sdl_mouse_motion_filter(event));
         case SDL_MOUSEBUTTONUP:
@@ -857,6 +911,15 @@ void _handle_events(void)
 
 
 static SDL_Joystick *joystick = NULL;
+#if SDL_VERSION_ATLEAST(3,0,0)
+//stub
+void _joystick_init(void) {}
+void _joystick_deinit(void) {}
+int _joystick_update(void) {return 0;}
+int _joystick_axis(int axis) {return 0;}
+int _joystick_hat(int hat) {return 0;}
+int _joystick_button(int button) {return 0;}
+#else
 void _joystick_init(void)
 {
     const char  *envr = getenv(BUILD_SDLJOYSTICK);
@@ -918,7 +981,6 @@ void _joystick_init(void)
     SDL_JoystickEventState(SDL_QUERY);
 } /* _joystick_init */
 
-
 void _joystick_deinit(void)
 {
     if (joystick != NULL)
@@ -953,6 +1015,7 @@ int _joystick_axis(int axis)
     return(SDL_JoystickGetAxis(joystick, axis));
 } /* _joystick_axis */
 
+
 int _joystick_hat(int hat)
 {
     if (joystick == NULL)
@@ -970,7 +1033,7 @@ int _joystick_button(int button)
 
     return(SDL_JoystickGetButton(joystick, button) != 0);
 } /* _joystick_button */
-
+#endif
 
 uint8_t  _readlastkeyhit(void)
 {
@@ -1080,7 +1143,11 @@ void _platform_init(int argc, char  **argv, const char  *title, const char  *ico
     titleNameLong = string_dupe(title);
     titleNameShort = string_dupe(iconName);
 
-#if !SDL_VERSION_ATLEAST(2,0,0)
+#if SDL_VERSION_ATLEAST(3,0,0)
+    sdl_flags = BFullScreen ? SDL_WINDOW_FULLSCREEN : 0;
+#elif SDL_VERSION_ATLEAST(2,0,0)
+    sdl_flags = BFullScreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0;
+#else
     sdl_flags = BFullScreen ? SDL_FULLSCREEN : 0;
 
     sdl_flags |= SDL_HWPALETTE;
@@ -1190,8 +1257,6 @@ void _platform_init(int argc, char  **argv, const char  *title, const char  *ico
     scancodes[SDLK_PAGEDOWN]        = 0xE051;
     scancodes[SDLK_INSERT]          = 0xE052;
     scancodes[SDLK_DELETE]          = 0xE053;
-#else
-    sdl_flags = BFullScreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0;
 #endif
 
     output_sdl_versions();

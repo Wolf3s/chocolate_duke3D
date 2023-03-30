@@ -69,8 +69,11 @@ static void DSL_SetErrorCode(int ErrorCode)
 int DSL_Init( void )
 {
 	DSL_SetErrorCode(DSL_Ok);
-	
+#if SDL_VERSION_ATLEAST(3,0,0)
+	if (SDL_InitSubSystem(SDL_INIT_AUDIO) < 0) {
+#else
 	if (SDL_InitSubSystem(SDL_INIT_AUDIO|SDL_INIT_NOPARACHUTE) < 0) {
+#endif
 		DSL_SetErrorCode(DSL_SDLInitFailure);
 		
 		return DSL_Error;
