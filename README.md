@@ -13,7 +13,7 @@ A **port** that:
 Requirements
 ============
 
-[SDL](http://libsdl.org) and [SDL_mixer](http://www.libsdl.org/projects/SDL_mixer) to compile and run the code.
+[SDL](http://libsdl.org) and [SDL_mixer](http://www.libsdl.org/projects/SDL_mixer) in order to compile and run the code.
 
 An original copy of [Duke Nukem 3D](https://3drealms.com/catalog/duke-nukem-3d_27/) (specifically the DUKE3D.GRP file from the original CD in binary working directory (and with rw permissions?)).
 
@@ -21,7 +21,7 @@ Build
 =====
 
 * **Linux**: Use [Autoconf/Automake](https://www.gnu.org/software/autoconf/manual/autoconf.html#Basic-Installation)
-* **Windows**: Use Visual Studio 2005 or Visual Studio 2012 or [Autoconf/Automake](https://www.gnu.org/software/autoconf/manual/autoconf.html#Basic-Installation)
+* **Windows**: Use Visual Studio: 2005, 2008, 2010, 2012 or [Autoconf/Automake](https://www.gnu.org/software/autoconf/manual/autoconf.html#Basic-Installation)
 * **OS X**: Use Xcode 4.0
 
 
@@ -32,6 +32,7 @@ Contributors
 * **Linux Integration:** [Juan Manuel Borges Caño](https://github.com/juanmabc)
 * **Autoconf/Automake Build System:** [darealshinji](https://github.com/darealshinji)
 * **64-bit Port:** [Rohit Nirmal](https://github.com/rohit-n)
+* **MSVC Ports:**  [Sarkie](https://github.com/Sarkie) and [André Guilherme](https://github.com/Wolf3s)
 
 More Information
 ================

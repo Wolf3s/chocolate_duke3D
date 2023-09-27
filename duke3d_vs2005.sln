@@ -1,8 +1,11 @@
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Game", "Game\Game_vs2012.vcxproj", "{6D80B050-1DC6-406A-98E3-60C65C3304F3}"
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Game", "Game\Game_vs2005.vcproj", "{6D80B050-1DC6-406A-98E3-60C65C3304F3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{05511B4A-FB13-49E5-AE53-EE1F063C055D} = {05511B4A-FB13-49E5-AE53-EE1F063C055D}
+	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine", "Engine\Engine_vs2012.vcxproj", "{05511B4A-FB13-49E5-AE53-EE1F063C055D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine", "Engine\Engine_vs2005.vcproj", "{05511B4A-FB13-49E5-AE53-EE1F063C055D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
