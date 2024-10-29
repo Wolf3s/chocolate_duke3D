@@ -20,19 +20,46 @@ case "$host" in
 esac
 AM_CONDITIONAL([WITH_WIN_ICON], [test "$WINDRES" != ""])
 
-# Checks for libraries.
-PKG_CHECK_MODULES([SDL], [sdl], [], [
-    AC_CHECK_LIB([SDL], [main], [], [exit 1])
-])
-PKG_CHECK_MODULES([SDL_MIXER], [SDL_mixer], [], [
-    AC_CHECK_LIB([SDL_mixer], [main], [], [exit 1])
-])
+AC_ARG_WITH([sdl2],
+            [AS_HELP_STRING([--with-sdl2],
+              [Use SDL2])],
+            [],
+            [])
+
+AS_IF([test x$with_sdl2 == "xyes"],
+  [
+    PKG_CHECK_MODULES([SDL], [sdl2], [], [
+        AC_CHECK_LIB([SDL2], [main], [], [exit 1])
+    ])
+    PKG_CHECK_MODULES([SDL_MIXER], [SDL2_mixer], [], [
+        AC_CHECK_LIB([SDL2_mixer], [main], [], [exit 1])
+    ])
+  ],
+  [
+    PKG_CHECK_MODULES([SDL], [sdl], [], [
+        AC_CHECK_LIB([SDL], [main], [], [exit 1])
+    ])
+    PKG_CHECK_MODULES([SDL_MIXER], [SDL_mixer], [], [
+        AC_CHECK_LIB([SDL_mixer], [main], [], [exit 1])
+    ])
+  ]
+)
 
 dnl Compiler flags
 CFLAGS_WARNINGS="-Wall -Wno-pointer-sign -Wno-pointer-to-int-cast -Wno-int-to-pointer-cast \
 -Wno-parentheses -Wno-maybe-uninitialized -Wno-unused-but-set-variable -Wno-unused-function -Wno-unused-result"
-CFLAGS="${CFLAGS_WARNINGS} -fno-strict-aliasing -fno-aggressive-loop-optimizations -DPLATFORM_UNIX $(pkg-config --cflags SDL_mixer) ${CFLAGS}"
-LDFLAGS="$(pkg-config --libs sdl) $(pkg-config --libs SDL_mixer) ${LDFLAGS}"
+CFLAGS="${CFLAGS_WARNINGS} -fno-strict-aliasing -fno-aggressive-loop-optimizations -DPLATFORM_UNIX ${CFLAGS}"
+
+AS_IF([test x$with_sdl2 == "xyes"],
+  [
+    CFLAGS="$(pkg-config --cflags SDL2_mixer) ${CFLAGS}"
+    LDFLAGS="$(pkg-config --libs sdl2) $(pkg-config --libs SDL2_mixer) ${LDFLAGS}"
+  ],
+  [
+    CFLAGS="$(pkg-config --cflags sdl) ${CFLAGS}"
+    LDFLAGS="$(pkg-config --libs sdl) $(pkg-config --libs SDL_mixer) ${LDFLAGS}"
+  ]
+)
 
 # Checks for header files.
 AC_CHECK_HEADERS([assert.h enet/enet.h])
