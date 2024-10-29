@@ -1729,7 +1729,11 @@ int VBE_setPalette(uint8_t  *palettebuffer)
         sdlp->b = (Uint8) ((((float) *p++) / 63.0) * 255.0);
         sdlp->g = (Uint8) ((((float) *p++) / 63.0) * 255.0);
         sdlp->r = (Uint8) ((((float) *p++) / 63.0) * 255.0);
-        sdlp->a = *p++;   /* This byte is unused in BUILD, too. */
+#if !SDL_VERSION_ATLEAST(2,0,0)
+        sdlp->unused = *p++;   /* This byte is unused in BUILD, too. */
+#else
+        sdlp->a = *p++;
+#endif
         sdlp++;
     }
 #if !SDL_VERSION_ATLEAST(2,0,0)
